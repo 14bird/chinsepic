@@ -36,19 +36,22 @@ struct capturePostion {
 		tim = e;
 	}
 };
-struct tag{
-    std::string con,name,bc,fc;
-    tag(std::string a,std::string b,std::string c,std::string d){
-        con=a;name=b;bc=c;fc=d;
-    }
+struct tag {
+	std::string con, name, bc, fc;
+	tag(std::string a, std::string b, std::string c, std::string d) {
+		con = a; name = b; bc = c; fc = d;
+	}
 };
-bool operator<(tag a,tag b);
+bool operator<(tag a, tag b);
 cv::Mat makepic(tag tt, capturePostion cap);
-cv::Mat getpic(tag tt,std::map<tag,cv::Mat>& ma);
+cv::Mat drawpic(tag tt);
+cv::Mat getpic(tag tt, std::map<tag, cv::Mat>& ma);
+cv::Scalar stringtoScalar(std::string a);
 #ifdef _WIN32
+#include<Windows.h>
 void GetStringSize(HDC hDC, const char* str, int* w, int* h);
-void putTextZH(Mat &dst, const char* str, Point org, Scalar color, int fontSize,
-    const char *fn = "Arial", bool italic = false, bool underline = false);
+void putTextZH(cv::Mat &dst, const char* str, cv::Point org, cv::Scalar color, int fontSize,
+	const char *fn = "Arial", bool italic = false, bool underline = false);
 
 #endif
 #endif

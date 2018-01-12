@@ -1,6 +1,10 @@
 #ifndef __CHINESEPIC_HPP
 #define __CHINESEPIC_HPP 1
 #include<string>
+#include<map>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/opencv.hpp>
 struct capturePostion {
 	int startx, starty, width, heigth, tim;
 	capturePostion() {
@@ -32,5 +36,13 @@ struct capturePostion {
 		tim = e;
 	}
 };
-void makepic(std::string con, std::string name, std::string bc, std::string fc, capturePostion cap);
+struct tag{
+    std::string con,name,bc,fc;
+    tag(std::string a,std::string b,std::string c,std::string d){
+        con=a;name=b;bc=c;fc=d;
+    }
+};
+bool operator<(tag a,tag b);
+cv::Mat makepic(tag tt, capturePostion cap);
+cv::Mat getpic(tag tt,std::map<tag,cv::Mat>& ma);
 #endif

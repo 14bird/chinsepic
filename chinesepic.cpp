@@ -2,8 +2,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <opencv2/highgui.hpp>
-#include <opencv2/core.hpp>
+bool operator<(tag a,tag b){
+    if(a.name!=b.name)return a.name<b.name;
+    if(a.fc<b.fc)return a.fc<b.fc;
+    if(a.bc<b.bc)return a.bc<b.bc;
+    return a.con<b.con;
+}
 #ifdef __unix__
 #include <cstdlib>
 #include <unistd.h>
@@ -36,7 +40,8 @@ int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
 	return -1;  // Failure
 }
 #endif
-void makepic(std::string con, std::string name, std::string bc, std::string fc, capturePostion cap) {
+cv::Mat makepic(tag tt, capturePostion cap) {
+    //std::cout<<"make"<<std::endl;
 	std::ofstream oo("tmp.html");
 	oo << "<html><body>" << std::endl;
 	oo << "<script language=\"javascript\">" << std::endl;
@@ -51,11 +56,11 @@ void makepic(std::string con, std::string name, std::string bc, std::string fc, 
 	oo << "//-->" << std::endl;
 	oo << "</script>" << std::endl;
 	oo << "<button type=\"button\" style=\"background:#";
-	oo << bc;
+	oo << tt.bc;
 	oo << ";color:#";
-	oo << fc;
+	oo << tt.fc;
 	oo << " \">";
-	oo << con;
+	oo << tt.con;
 	oo << "</button>" << std::endl;
 	oo << "</body></html>" << std::endl;
 	oo.close();
@@ -105,5 +110,12 @@ void makepic(std::string con, std::string name, std::string bc, std::string fc, 
 	cv::Mat im = cv::imread("tmp.bmp");
 	remove("output.bmp");
 	cv::Mat tmp = im(cv::Rect(cap.startx, cap.starty, cap.width, cap.heigth));
-	cv::imwrite(name + ".bmp", tmp);
+	cv::imwrite(tt.name + ".bmp", tmp);
+    return tmp;
+}
+cv::Mat getpic(tag tt,std::map<tag,cv::Mat>& ma){
+    if(ma.find(tt)==ma.end()){
+        ma.insert(std::make_pair(tt,makepic(tt,capturePostion(10, 98, 40, 16, 4000))));
+    }
+    return ma[tt];
 }

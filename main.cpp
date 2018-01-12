@@ -17,4 +17,5 @@ int main() {
     cv::waitKey(0);
 	//std::wcout<<con<<endl;
 #endif
+
 }

@@ -45,4 +45,10 @@ struct tag{
 bool operator<(tag a,tag b);
 cv::Mat makepic(tag tt, capturePostion cap);
 cv::Mat getpic(tag tt,std::map<tag,cv::Mat>& ma);
+#ifdef _WIN32
+void GetStringSize(HDC hDC, const char* str, int* w, int* h);
+void putTextZH(Mat &dst, const char* str, Point org, Scalar color, int fontSize,
+    const char *fn = "Arial", bool italic = false, bool underline = false);
+
+#endif
 #endif

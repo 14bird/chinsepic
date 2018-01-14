@@ -11,6 +11,8 @@ bool operator<(tag a, tag b) {
 #ifdef __unix__
 #include <cstdlib>
 #include <unistd.h>
+#include <X11/Xlib.h>
+#include <Imlib2.h>
 #else
 #include <Windows.h>
 #include <gdiplus.h>
@@ -115,11 +117,7 @@ cv::Mat makepic(tag tt, capturePostion cap) {
 }
 cv::Mat getpic(tag tt, std::map<tag, cv::Mat>& ma) {
 	if (ma.find(tt) == ma.end()) {
-#ifdef __unix__
-		ma.insert(std::make_pair(tt, makepic(tt, capturePostion(10, 98, 40, 16, 4000))));
-#else
-		ma.insert(std::make_pair(tt, drawpic(tt)));
-#endif
+		ma.insert(std::make_pair(tt, drawpic(tt,IMG_SIZ)));
 	}
 	return ma[tt];
 }
@@ -259,6 +257,46 @@ void putTextZH(cv::Mat &dst, const char* str, cv::Point org, cv::Scalar color, i
 	DeleteObject(hBmp);
 	DeleteDC(hDC);
 }
+#else
+void putTextZH(cv::Mat& im,std::string con,cv::Point pos,cv::Scalar col,int siz,std::string fontdir){
+    Imlib_Image img;
+    img = imlib_create_image (im.cols,im.rows);
+    imlib_context_set_image(img);
+    DATA32* imdata=imlib_image_get_data ();
+    Imlib_Font fonts=imlib_load_font(fontdir.c_str());
+    imlib_context_set_font(fonts);
+     imlib_context_set_color (col[2], col[1], col[0], 227);
+    if(fonts==NULL){
+        std::cout<<"No font"<<std::endl;
+        exit(0);
+    }
+    int coll[3];
+    cv::namedWindow("wi");
+    /*imshow("wi",im);
+    cv::waitKey(0);*/
+    coll[0]=im.data[0],coll[1]=im.data[1],col[2]=im.data[2];
+    cv::MatIterator_<cv::Vec3b> it, end;
+    int i=0;
+    for( it = im.begin<cv::Vec3b>();it!= im.end<cv::Vec3b>();it++){
+        imdata[i++]=255u*256u*256u*256u+((unsigned int)((*it)[2]))*256*256+((unsigned int)((*it)[1]))*256+(unsigned int)((*it)[0]);
+    }
+    //std::cout<<imdata[0]<<' '<<coll[0]<<' '<<col[1]<<' '<<col[2]<<std::endl;
+    //std::cout<<imdata[0]<<std::endl;
+    int wi=siz*(con.size()+1),he=siz,ze=0;
+    int *p_w=&wi,*p_h=&he,*p_z=&ze;
+    imlib_text_draw_with_return_metrics(pos.x,pos.y,con.c_str(),p_w,p_h,p_z,p_z);
+    imlib_image_put_back_data(imdata);
+    i=0;
+    for( it = im.begin<cv::Vec3b>();it!= im.end<cv::Vec3b>();it++){
+        unsigned int tt=imdata[i++];
+        (*it)[0]=tt&255;tt>>=8;
+        (*it)[1]=tt&255;tt>>=8;
+        (*it)[2]=tt&255;
+        //imdata[i++]=255u*256u*256u*256u+((unsigned int)((*it)[2]))*256*256+((unsigned int)((*it)[1]))*256+(unsigned int)((*it)[0]);
+    }
+    //imlib_save_image("a.bmp");
+    imlib_free_image();
+}
 #endif
 unsigned char gs(std::string s) {
 	if (s.size() != 2) {
@@ -266,17 +304,21 @@ unsigned char gs(std::string s) {
 		exit(0);
 	}
 	unsigned char ans = 0;
-	ans += s[0] > '9' ? s[0] - 'a' : s[0] - '0';
+	ans += s[0] > '9' ? s[0] - 'a' +10: s[0] - '0';
 	ans *= 16;
-	ans += s[1] > '9' ? s[1] - 'a' : s[1] - '0';
+	ans += s[1] > '9' ? s[1] - 'a' +10: s[1] - '0';
 	return ans;
 }
 cv::Scalar stringtoScalar(std::string a) {
 	return cv::Scalar(gs(a.substr(0,2)),gs(a.substr(2,2)),gs(a.substr(4,2)));
 }
-cv::Mat drawpic(tag tt) {
-	cv::Mat im(20,100,CV_8UC3,stringtoScalar(tt.bc));
-	putTextZH(im, tt.con.c_str(), cv::Point(0, 0), stringtoScalar(tt.fc), 20, "Arial");
+cv::Mat drawpic(tag tt,int siz) {
+	cv::Mat im(siz,siz*(tt.con.size()+1),CV_8UC3,stringtoScalar(tt.bc));
+    #ifdef _WIN32
+	putTextZH(im, tt.con.c_str(), cv::Point(0, 0), stringtoScalar(tt.fc), siz, "Arial");
+    #else
+    putTextZH(im, tt.con, cv::Point(0, 0), stringtoScalar(tt.fc), IMG_SIZ ,"/usr/share/fonts/TTF/DroidSansFallback/10");
+    #endif
 	cv::namedWindow("wi");
 	imshow("wi", im);
 	cv::waitKey(0);

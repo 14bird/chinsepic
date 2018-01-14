@@ -5,14 +5,15 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/opencv.hpp>
+#define IMG_SIZ 20 //control the size of picture
 struct capturePostion {
 	int startx, starty, width, heigth, tim;
 	capturePostion() {
-		startx = 10;//左上角坐标
+		startx = 10;//the pos of top-left point
 		starty = 76;
-		width = 40;//图片大小
+		width = 40;//the size of picture
 		heigth = 16;
-		tim = 1000;//浏览器启动时间
+		tim = 1000;//the time of browser starts up
 	}
 	capturePostion(int a, int b) {
 		startx = a;
@@ -44,7 +45,7 @@ struct tag {
 };
 bool operator<(tag a, tag b);
 cv::Mat makepic(tag tt, capturePostion cap);
-cv::Mat drawpic(tag tt);
+cv::Mat drawpic(tag tt,int siz);
 cv::Mat getpic(tag tt, std::map<tag, cv::Mat>& ma);
 cv::Scalar stringtoScalar(std::string a);
 #ifdef _WIN32
@@ -52,6 +53,7 @@ cv::Scalar stringtoScalar(std::string a);
 void GetStringSize(HDC hDC, const char* str, int* w, int* h);
 void putTextZH(cv::Mat &dst, const char* str, cv::Point org, cv::Scalar color, int fontSize,
 	const char *fn = "Arial", bool italic = false, bool underline = false);
-
+#else
+void putTextZH(cv::Mat& im,std::string con,cv::Point pos,cv::Scalar col,int siz,std::string fontdir);
 #endif
 #endif

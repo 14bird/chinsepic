@@ -20,11 +20,11 @@ std::vector<int> getrange(cv::Point center,std::vector<int> pre,int width,int he
 int rangeofxchange,int rangeofychange,int widthrange,int heigthrange){
     std::vector<int> ans=calrange(center,width,heigth,widthrange,heigthrange);
     if(abs(pre[0]-ans[0])>rangeofxchange){
-        ans[0]=pre[0]>ans[0]?pre[0]-rangeofxchange:pre[0]+rangeofychange;
+        ans[0]=pre[0]>ans[0]?pre[0]-rangeofxchange:pre[0]+rangeofxchange;
         ans[2]=ans[0]+width;
     }
     if(abs(pre[1]-ans[1])>rangeofychange){
-        ans[1]=pre[1]>ans[1]?pre[1]-rangeofxchange:pre[1]+rangeofychange;
+        ans[1]=pre[1]>ans[1]?pre[1]-rangeofychange:pre[1]+rangeofychange;
         ans[3]=ans[1]+heigth;
     }
     return ans;
@@ -132,7 +132,7 @@ int heigth,int px,int py,std::string condir,std::string bindir){
                 if(label!=cv::String("person")){
                     continue;
                 }
-                cv::rectangle(frame, object, cv::Scalar(0, 255, 0));
+                //cv::rectangle(frame, object, cv::Scalar(0, 255, 0));
                 vec.push_back(cv::Point(tmp[0]+xLeftBottom+(xRightTop - xLeftBottom)/2,tmp[1]+yLeftBottom+(yRightTop - yLeftBottom)/2));
             }
         }
@@ -155,8 +155,8 @@ int heigth,int px,int py,std::string condir,std::string bindir){
                 px=a,py=b;
             }
         }
-        cv::rectangle(vi[i],roi,cv::Scalar(255,0,255));
-        std::cout<<px<<' '<<py<<std::endl;
+        //cv::rectangle(vi[i],roi,cv::Scalar(255,0,255));
+        //std::cout<<px<<' '<<py<<std::endl;
         /*imshow("win",vi[i]);
         cv::waitKey(0);*/
         ans.push_back(cv::Point(px,py));

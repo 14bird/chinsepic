@@ -11,7 +11,7 @@ bool operator<(tag a, tag b) {
 #ifdef __unix__
 #include <cstdlib>
 #include <unistd.h>
-#include <X11/Xlib.h>
+//#include <X11/Xlib.h>
 #include <Imlib2.h>
 #else
 #include <Windows.h>
@@ -272,16 +272,12 @@ void putTextZH(cv::Mat& im,std::string con,cv::Point pos,cv::Scalar col,int siz,
     }
     int coll[3];
     cv::namedWindow("wi");
-    /*imshow("wi",im);
-    cv::waitKey(0);*/
     coll[0]=im.data[0],coll[1]=im.data[1],col[2]=im.data[2];
     cv::MatIterator_<cv::Vec3b> it, end;
     int i=0;
     for( it = im.begin<cv::Vec3b>();it!= im.end<cv::Vec3b>();it++){
         imdata[i++]=255u*256u*256u*256u+((unsigned int)((*it)[2]))*256*256+((unsigned int)((*it)[1]))*256+(unsigned int)((*it)[0]);
     }
-    //std::cout<<imdata[0]<<' '<<coll[0]<<' '<<col[1]<<' '<<col[2]<<std::endl;
-    //std::cout<<imdata[0]<<std::endl;
     int wi=siz*(con.size()+1),he=siz,ze=0;
     int *p_w=&wi,*p_h=&he,*p_z=&ze;
     imlib_text_draw_with_return_metrics(pos.x,pos.y,con.c_str(),p_w,p_h,p_z,p_z);
@@ -292,9 +288,7 @@ void putTextZH(cv::Mat& im,std::string con,cv::Point pos,cv::Scalar col,int siz,
         (*it)[0]=tt&255;tt>>=8;
         (*it)[1]=tt&255;tt>>=8;
         (*it)[2]=tt&255;
-        //imdata[i++]=255u*256u*256u*256u+((unsigned int)((*it)[2]))*256*256+((unsigned int)((*it)[1]))*256+(unsigned int)((*it)[0]);
     }
-    //imlib_save_image("a.bmp");
     imlib_free_image();
 }
 #endif

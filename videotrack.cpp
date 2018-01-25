@@ -89,6 +89,7 @@ int heigth,int px,int py,std::string condir,std::string bindir){
     //std::cout<<roi.x<<' '<<roi.y<<' '<<roi.width<<' '<<' '<<vi[0].cols<<' '<<vi[0].rows<<std::endl;
     //std::cout<<inipos[0]<<' '<<inipos[1]<<' '<<inipos[2]-inipos[0]<<' '<<inipos[3]-inipos[1]<<std::endl;
     //cv::namedWindow("win");
+    int ttt=clock();
     for (int i=0;i<vi.size();i++)
     {
         if (vi[i].empty())
@@ -109,9 +110,9 @@ int heigth,int px,int py,std::string condir,std::string bindir){
         //! [Make forward pass]
         cv::Mat detection = net.forward("detection_out"); //compute output
         //! [Make forward pass]
-        std::vector<double> layersTimings;
-        double freq = cv::getTickFrequency() / 1000;
-        double time = net.getPerfProfile(layersTimings) / freq;
+        //std::vector<double> layersTimings;
+        //double freq = cv::getTickFrequency() / 1000;
+        //double time = net.getPerfProfile(layersTimings) / freq;
         cv::Mat detectionMat(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
         float confidenceThreshold = 0.5;
         std::vector<cv::Point> vec;
@@ -161,5 +162,6 @@ int heigth,int px,int py,std::string condir,std::string bindir){
         cv::waitKey(0);*/
         ans.push_back(cv::Point(px,py));
     }
+    std::cout<<((double)(clock()-ttt))/CLOCKS_PER_SEC<<std::endl;
     return ans;
 }

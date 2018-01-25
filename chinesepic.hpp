@@ -1,7 +1,8 @@
 #ifndef __CHINESEPIC_HPP
 #define __CHINESEPIC_HPP 1
-#include<string>
-#include<map>
+#include <string>
+#include <map>
+#include <algorithm>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/opencv.hpp>
@@ -56,4 +57,5 @@ void putTextZH(cv::Mat &dst, const char* str, cv::Point org, cv::Scalar color, i
 #else
 void putTextZH(cv::Mat& im,std::string con,cv::Point pos,cv::Scalar col,int siz,std::string fontdir);
 #endif
+void rectangle_cir(cv::Mat im,cv::Point topleft,int width,int heigth,cv::Scalar col,int border=-1,int cir=8);
 #endif

@@ -318,3 +318,27 @@ cv::Mat drawpic(tag tt,int siz) {
 	cv::waitKey(0);
 	return im;
 }
+void rectangle_cir(cv::Mat im,cv::Point topleft,int width,int height,cv::Scalar col,int border,int r){
+    width=std::max(3,width);height=std::max(3,height);
+    if(width<2*r||height<2*r){
+        r=std::min(height/2,width/2);
+    }
+    if(border<0){
+        rectangle(im,cv::Rect(topleft.x,topleft.y+r,width,height-r*2),col,-1);
+        rectangle(im,cv::Rect(topleft.x+r,topleft.y,width-r*2,height),col,-1);
+        cv::circle(im,cv::Point(topleft.x+r,topleft.y+r),r,col,-1);
+        cv::circle(im,cv::Point(topleft.x+width-r,topleft.y+r),r,col,-1);
+        cv::circle(im,cv::Point(topleft.x+r,topleft.y+height-r),r,col,-1);
+        cv::circle(im,cv::Point(topleft.x+width-r,topleft.y+height-r),r,col,-1);
+    }
+    else{
+        cv::line(im,cv::Point(topleft.x+r,topleft.y),cv::Point(topleft.x+width-r,topleft.y),col,border);
+        cv::line(im,cv::Point(topleft.x+r,topleft.y+height),cv::Point(topleft.x+width-r,topleft.y+height),col,border);
+        cv::line(im,cv::Point(topleft.x,topleft.y+r),cv::Point(topleft.x,topleft.y+height-r),col,border);
+        cv::line(im,cv::Point(topleft.x+width,topleft.y+r),cv::Point(topleft.x+width,topleft.y+height-r),col,border);
+        cv::ellipse(im,cv::Point(topleft.x+r,topleft.y+r),cv::Size(r,r),0,180,270,col,border);
+        cv::ellipse(im,cv::Point(topleft.x+width-r,topleft.y+r),cv::Size(r,r),0,270,360,col,border);
+        cv::ellipse(im,cv::Point(topleft.x+r,topleft.y+height-r),cv::Size(r,r),0,90,180,col,border);
+        cv::ellipse(im,cv::Point(topleft.x+width-r,topleft.y+height-r),cv::Size(r,r),0,0,90,col,border);
+    }
+}

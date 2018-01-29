@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <algorithm>
+#include <cstdarg>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/opencv.hpp>
@@ -52,10 +53,14 @@ cv::Scalar stringtoScalar(std::string a);
 #ifdef _WIN32
 #include<Windows.h>
 void GetStringSize(HDC hDC, const char* str, int* w, int* h);
-void putTextZH(cv::Mat &dst, const char* str, cv::Point org, cv::Scalar color, int fontSize,
-	const char *fn = "Arial", bool italic = false, bool underline = false);
+void putTextZH(cv::Mat &imm, const char* str, cv::Point org, cv::Scalar color, int fontSize,
+	const char *fn = "Arial", bool italic = false, bool underline = false,bool cal=1);
 #else
-void putTextZH(cv::Mat& im,std::string con,cv::Point pos,cv::Scalar col,int siz,std::string fontdir);
+void putTextZH(cv::Mat& imm,std::string con,cv::Point pos,cv::Scalar col,int siz,std::string fontdir,bool cal=1);
 #endif
-void rectangle_cir(cv::Mat im,cv::Point topleft,int width,int heigth,cv::Scalar col,int border=-1,int cir=8);
+void rectangle_cir(cv::Mat imm,cv::Point topleft,int width,int heigth,cv::Scalar col,int border=-1,int cir=8);
+#define repeatsol(a,b,c,d,...) for(int i=b;i<b+c;i++)d(a[i], ##__VA_ARGS__);
+//a means array, b means start time,c means effective time,
+//d means function time,... means the parameter of function
+//void superchu(void (p_fun*)(int));
 #endif

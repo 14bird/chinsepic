@@ -130,8 +130,16 @@ void GetStringSize(HDC hDC, const char* str, int* w, int* h)
 	if (h != 0) *h = size.cy;
 }
 
-void putTextZH(cv::Mat &dst, const char* str, cv::Point org, cv::Scalar color, int fontSize, const char* fn, bool italic, bool underline)
+void putTextZH(cv::Mat &imm, const char* str, cv::Point org, cv::Scalar color, int fontSize, const char* fn, bool italic, bool underline,bool cal)
 {
+    cv::Mat dst;
+    if(cal){
+        dst = imm(cv::Rect(org.x,org.y,(int)((strlen(str))*fontSize*1.4),(int)(fontSize*1.4)));
+        org.x=0,org.y=0;
+    }
+    else{
+        dst = imm;
+    }
 	CV_Assert(dst.data != 0 && (dst.channels() == 1 || dst.channels() == 3));
 
 	int x, y, r, b;
@@ -258,7 +266,16 @@ void putTextZH(cv::Mat &dst, const char* str, cv::Point org, cv::Scalar color, i
 	DeleteDC(hDC);
 }
 #else
-void putTextZH(cv::Mat& im,std::string con,cv::Point pos,cv::Scalar col,int siz,std::string fontdir){
+void putTextZH(cv::Mat& imm,std::string con,cv::Point pos,cv::Scalar col,int siz,std::string fontdir,bool cal){
+    //std::cout<<con.size()<<std::endl;
+    cv::Mat im;
+    if(cal){
+        im = imm(cv::Rect(pos.x,pos.y,(int)(con.size()*siz*1.4),(int)(siz*1.4)));
+        pos.x=0,pos.y=0;
+    }
+    else{
+        im = imm;
+    }
     Imlib_Image img;
     img = imlib_create_image (im.cols,im.rows);
     imlib_context_set_image(img);
